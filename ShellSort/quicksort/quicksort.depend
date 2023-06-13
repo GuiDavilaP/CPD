@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1686676906 source:c:\users\aluno\documents\cpd\quicksort\main.c
+	<stdio.h>
+	<stdlib.h>
+
