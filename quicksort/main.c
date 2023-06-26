@@ -1,14 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include<time.h>
+#include <time.h>
 
-#define SIZE 6
-
-/*int getSize(int vet[])
-{
-    int size = sizeof(vet)/sizeof(vet[0]);
-    return size;
-}*/
+int vetor[1000000];
+int swaps;
+int recursoes;
 
 void mediana(int vetor[], int tam)
 {
@@ -68,6 +64,7 @@ void swap(int vet[], int pos1, int pos2)
     int aux = vet[pos1];
     vet[pos1] = vet[pos2];
     vet[pos2] = aux;
+    swaps++;
 }
 
 int partLom(int vet[], int esq, int dir)
@@ -108,6 +105,7 @@ int partHoare(int vet[], int esq, int dir)
 void qksLomuto(int vet[], int esq, int dir)
 {
     int part;
+    recursoes++;
     if(esq<dir)
     {
         part = partLom(vet, esq, dir);
@@ -119,6 +117,7 @@ void qksLomuto(int vet[], int esq, int dir)
 void qksHoare(int vet[], int esq, int dir)
 {
     int part;
+    recursoes++;
     if(esq<dir)
     {
         part = partHoare(vet, esq, dir);
@@ -130,13 +129,37 @@ void qksHoare(int vet[], int esq, int dir)
 
 int main()
 {
-    int vetTest[] = {4,2,6,7,5,9};
+    int tamanho_vetor, aux_num;
+    clock_t start, end;
+    double exec_time;
 
-    mediana(vetTest, SIZE);
-    printArray(vetTest, SIZE);
-    printf("\n");
-    qksHoare(vetTest, 0, SIZE - 1);
-    printArray(vetTest, SIZE);
+    while (scanf("%d", &tamanho_vetor) != EOF)
+    {
+        for (int i=0; i<tamanho_vetor; i++)
+        {
+            scanf("%d", &aux_num);
+            vetor[i] = aux_num;
+        }
 
+        swaps = 0;
+        recursoes = 0;
+
+        start = clock();
+
+        /* !!! Troque funções para diferentes saídas, para enviar resultado para arquivo use "sort ./a.out < entrada-quicksort.txt > stats-mediana-hoare.txt". !!! */
+        //mediana(vetor, tamanho_vetor);
+        aleatorio(vetor, tamanho_vetor);
+        //qksHoare(vetor, 0, tamanho_vetor - 1);
+        qksLomuto(vetor, 0, tamanho_vetor - 1);
+
+        end = clock();
+        exec_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+        printf("TAMANHO ENTRADA %d", tamanho_vetor);
+        printf("\nSWAPS %d", swaps);
+        printf("\nRECURSOES %d", recursoes);
+        printf("\nTEMPO %f\n", exec_time);
+
+    }
     return 0;
 }
