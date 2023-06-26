@@ -63,15 +63,79 @@ void printArray(int vet[], int tam)
         printf("%d ", vet[i]);
 }
 
+void swap(int vet[], int pos1, int pos2)
+{
+    int aux = vet[pos1];
+    vet[pos1] = vet[pos2];
+    vet[pos2] = aux;
+}
+
+int partLom(int vet[], int esq, int dir)
+{
+    int ultMenor = esq + 1;
+    int chave = vet[esq];
+
+    for(int i = esq + 1; i <= dir; i++)
+    {
+        if(vet[i] < chave)
+        {
+            swap(vet, i, ultMenor);
+            ultMenor++;
+        }
+    }
+    swap(vet, esq, ultMenor-1); // Coloca particionador na posição final.
+    return (ultMenor-1);
+}
+
+int partHoare(int vet[], int esq, int dir)
+{
+    int i = esq;
+    int j = dir+1;
+    int chave = vet[esq];
+
+    while(1)
+    {
+        while(vet[++i] <= chave && i != dir); // Acha primeiro elemento da esquerda à direita maior que particionador.
+        while(vet[--j] > chave && j != esq); // Acha primeiro elemento da direita à esquerda menor que particionador.
+        if(i >= j)
+            break;
+        swap(vet, i, j);
+    }
+    swap(vet, esq, j); // Coloca particionador na posição final.
+    return j;
+}
+
+void qksLomuto(int vet[], int esq, int dir)
+{
+    int part;
+    if(esq<dir)
+    {
+        part = partLom(vet, esq, dir);
+        qksLomuto(vet, esq, part-1); // Sub-array menor que particionador.
+        qksLomuto(vet, part+1, dir); // Sub-array maior que particionador.
+    }
+}
+
+void qksHoare(int vet[], int esq, int dir)
+{
+    int part;
+    if(esq<dir)
+    {
+        part = partHoare(vet, esq, dir);
+        qksHoare(vet, esq, part-1); // Sub-array menor que particionador.
+        qksHoare(vet, part+1, dir); // Sub-array maior que particionador.
+    }
+}
+
+
 int main()
 {
-    int vetTest[] = {3,1,6,5,2,7};
+    int vetTest[] = {4,2,6,7,5,9};
 
+    mediana(vetTest, SIZE);
     printArray(vetTest, SIZE);
     printf("\n");
-
-    //med = mediana(vetTest, SIZE);
-    mediana(vetTest, SIZE);
+    qksHoare(vetTest, 0, SIZE - 1);
     printArray(vetTest, SIZE);
 
     return 0;
